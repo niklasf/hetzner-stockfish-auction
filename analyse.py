@@ -22,79 +22,90 @@ _SIMD_AVX2    = 1.00
 _SIMD_AVX512  = 1.07   # avg across Zen4+Zen5 avx512 builds
 _SIMD_VNNI512 = 1.10   # avg across Zen4+Zen5 best builds; Intel VNNI may be higher
 
-# Constant calibrated to return Nodes/second matching stockfish speedtest output.
-# Anchor: Ryzen 7 7700 (16t, 3.8 GHz base), speedtest avx2 = 17,315,222 N/s
-# → 17,315,222 / (16 × 3.8) ≈ 284,790 → 285,000
-# Cross-check: Ryzen 9 9950X (32t, 4.3 GHz base), predicted 39.2M vs measured 33.9M (+16%)
-# — overestimate expected since all-core boost is well below base for 32-thread load.
-_NODES_PER_THREAD_GHZ = 285_000
+# 1 thread is reserved for plumbing (OS, Stockfish I/O thread, etc.).
+# The remaining threads run slightly super-linearly: dropping 1 thread from N costs
+# less than 1/N of performance because synchronization overhead is reduced.
+# Measured on avx512icl build:
+#   Ryzen 7 7700:  16t=18,361,890 → 15t=17,878,551 (-2.6% vs -6.25% linear)
+#   Ryzen 9 9950X: 32t=38,357,048 → 31t=37,954,386 (-1.1% vs -3.1% linear)
+# Model: ratio(N) = (N-1)/N × (1 + 0.651/N), fit to both data points.
+#
+# All bench() values below reflect (threads-1) usage with the best applicable
+# Stockfish build, in Nodes/second as reported by: stockfish speedtest
+# using Stockfish dev-20260307-b3a810a1.
+
+# Constant calibrated so default_bench(16, 3.8) ≈ Ryzen 7 7700 speedtest-avx2 at 15t
+# = 17,315,222 / 15 / 3.8 ≈ 314,000. (Using avx2 so SIMD multiplier applies on top.)
+_NODES_PER_THREAD_GHZ = 314_000
 
 def default_bench(threads, frequency, simd=_SIMD_AVX2) -> int:
-    return int(threads * frequency * _NODES_PER_THREAD_GHZ * simd)
+    # 1 thread reserved for plumbing
+    return int((threads - 1) * frequency * _NODES_PER_THREAD_GHZ * simd)
 
 def bench(cpu: str) -> float:
-    # Values in Nodes/second as reported by: stockfish speedtest
-    # using Stockfish dev-20260307-b3a810a1, best applicable SIMD build.
+    # Nodes/second with 1 thread reserved for plumbing, best applicable SIMD build.
     #
     # Directly measured (★): from speedtest files in speedtest/
-    # Scaled from pts/stockfish (○): old openbenchmarking.org values × 1.086
-    #   (calibration factor: speedtest-avx2 / pts-stockfish for Ryzen 7 7700)
-    # Estimated (~): architectural scaling from measured anchors, ±15-20%
+    # Scaled from pts/stockfish (○): old openbenchmarking.org value × 1.086
+    #   (avx2 speedtest / pts-stockfish for Ryzen 7 7700) × ratio(N)
+    # Estimated (~): architectural scaling × ratio(N), ±15-20%
+    #
+    # ratio(N) = (N-1)/N × (1 + 0.651/N) — superlinear scaling model
     match cpu:
         case "Intel Core i7-6700":        # Skylake, AVX2, 8t @ 3.4 GHz
-            return 3_704_000              # ○ pts/stockfish × 1.086
+            return 3_505_000              # ○ × ratio(8)=0.946
         case "Intel Core i7-7700":        # Kaby Lake, AVX2, 8t @ 3.6 GHz
-            return 3_920_000              # ~ scaled from i7-6700 × (3.6/3.4)
+            return 3_709_000              # ~ × ratio(8)
         case "Intel Xeon E3-1275v5":      # Skylake, AVX2, 8t @ 3.6 GHz
-            return 3_910_000              # ~ same die as i7-6700 × (3.6/3.4)
+            return 3_700_000              # ~ × ratio(8)
         case "Intel Xeon E3-1275V6":      # Kaby Lake, AVX2, 8t @ 3.8 GHz
-            return 4_138_000              # ~ scaled from i7-7700 × (3.8/3.6)
+            return 3_915_000              # ~ × ratio(8)
         case "Intel Xeon E5-1650V3":      # Haswell, AVX2, 12t @ 3.5 GHz
-            return 7_602_000              # ~ Haswell ~7% lower IPC than Skylake
+            return 7_347_000              # ~ × ratio(12)=0.966
         case "Intel Core i7-8700":        # Coffee Lake, AVX2, 12t @ 3.2 GHz
-            return 5_104_000              # ~ scaled from i7-6700 lineage
+            return 4_932_000              # ~ × ratio(12)
         case "AMD Ryzen 5 3600":          # Zen2, AVX2, 12t @ 3.6 GHz
-            return 8_462_000              # ○ pts/stockfish × 1.086
+            return 8_178_000              # ○ × ratio(12)
         case "Intel XEON E-2176G":        # Coffee Lake, AVX2, 12t @ 3.7 GHz
-            return 5_897_000              # ~ scaled from i7-8700 × (3.7/3.2)
+            return 5_699_000              # ~ × ratio(12)
         case "AMD Ryzen 7 1700X" | "AMD Ryzen 7 PRO 1700X":  # Zen1, AVX2, 16t @ 3.4 GHz
-            return 9_177_000              # ~ scaled from 3700X × (16/16) × (3.4/3.6) × 0.90 IPC
+            return 8_953_000              # ~ × ratio(16)=0.976
         case "Intel XEON E-2276G":        # Coffee Lake, AVX2, 12t @ 3.8 GHz
-            return 6_060_000              # ~ scaled from E-2176G × (3.8/3.7)
+            return 5_856_000              # ~ × ratio(12)
         case "Intel Core i9-9900K":       # Coffee Lake, AVX2, 16t @ 3.6 GHz
-            return 8_688_000              # ~ scaled from i7-8700 × (16/12) × (3.6/3.2)
+            return 8_476_000              # ~ × ratio(16)
         case "AMD Ryzen 7 3700X":         # Zen2, AVX2, 16t @ 3.6 GHz
-            return 10_831_000             # ○ pts/stockfish × 1.086
+            return 10_567_000             # ○ × ratio(16)
         case "Intel Core i5-12500":       # Alder Lake, AVX2 only (no AVX-512), 12t hybrid
-            return 5_973_000              # ~ P+E hybrid; effective throughput estimate
+            return 5_772_000              # ~ × ratio(12)
         case "Intel Xeon W-2145":         # Skylake-W, AVX-512 native, 16t @ 3.7 GHz
-            return 9_296_000              # ~ avx2 base × 1.086 × _SIMD_AVX512
+            return 9_070_000              # ~ avx2 × 1.086 × _SIMD_AVX512 × ratio(16)
         case "AMD Ryzen 7 7700":          # Zen4, AVX-512, 16t @ 3.8 GHz
-            return 18_504_000             # ★ speedtest vnni512 (best build for Zen4)
+            return 17_879_000             # ★ speedtest avx512icl, 15t (1 reserved)
         case "Intel Xeon E3-1270V3":      # Haswell, AVX2, 8t @ 3.5 GHz
-            return 3_551_000              # ~ scaled from i7-6700 × (3.5/3.4) × 0.93 IPC
+            return 3_360_000              # ~ × ratio(8)
         case "Intel Xeon E3-1271V3":      # Haswell, AVX2, 8t @ 3.6 GHz
-            return 3_649_000              # ~ scaled from i7-6700 × (3.6/3.4) × 0.93 IPC
+            return 3_453_000              # ~ × ratio(8)
         case "AMD Ryzen 9 3900":          # Zen2, AVX2, 24t @ 3.1 GHz
-            return 14_009_000             # ~ scaled from 3700X × (24/16) × (3.1/3.6)
+            return 13_789_000             # ~ × ratio(24)=0.984
         case "AMD Ryzen Threadripper 2950X":  # Zen+, AVX2, 32t @ 3.5 GHz
-            return 19_005_000             # ~ scaled from 1700X × 2 × (3.5/3.4) × 1.03
+            return 18_786_000             # ~ × ratio(32)=0.989
         case "Intel Core i9-13900":       # Raptor Lake, AVX2 only (no AVX-512), 32t hybrid
-            return 30_408_000             # ~ boost-clock estimate (base 1.5 GHz misleading)
+            return 30_057_000             # ~ boost-clock estimate × ratio(32)
         case "Intel Core i9-12900K":      # Alder Lake, AVX2 only (no AVX-512), 24t hybrid
-            return 17_376_000             # ~ boost-clock estimate
+            return 17_104_000             # ~ boost-clock estimate × ratio(24)
         case "AMD Ryzen 9 5950X":         # Zen3, AVX2, 32t @ 3.4 GHz
-            return 23_071_000             # ○ pts/stockfish × 1.086
+            return 22_805_000             # ○ × ratio(32)
         case "Intel Xeon Gold 5412U":     # Sapphire Rapids, VNNI4 native, 48t @ 2.1 GHz
-            return 47_800_000             # ~ base × 1.086 × _SIMD_VNNI512 (Intel native may be higher)
+            return 47_439_000             # ~ base × 1.086 × _SIMD_VNNI512 × ratio(48)=0.992
         case "AMD EPYC 7401P":            # Zen1, AVX2, 48t @ 2.0 GHz
-            return 18_462_000             # ~ scaled from 1700X × 3 × (2.0/3.4) × 1.086
+            return 18_323_000             # ~ × ratio(48)
         case "Intel Xeon W-2295":         # Cascade Lake-W, AVX-512 native, 36t @ 3.0 GHz
-            return 23_240_000             # ~ base × 1.086 × _SIMD_AVX512
+            return 23_003_000             # ~ base × 1.086 × _SIMD_AVX512 × ratio(36)=0.990
         case "Intel Xeon W-2245":         # Cascade Lake-W, AVX-512 native, 16t @ 3.9 GHz
-            return 13_944_000             # ~ base × 1.086 × _SIMD_AVX512
+            return 13_604_000             # ~ base × 1.086 × _SIMD_AVX512 × ratio(16)
         case "AMD EPYC 7502" | "AMD EPYC 7502P":  # Rome/Zen2, AVX2, 64t @ 2.5 GHz
-            return 30_191_000             # ~ scaled from 3700X × (64/16) × (2.5/3.6) × 1.086
+            return 30_022_000             # ~ × ratio(64)=0.994
         case _:
             return float("inf")  # unknown CPU — flags at top of output for follow-up
 
