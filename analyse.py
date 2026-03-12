@@ -121,7 +121,6 @@ def main():
             price=server["price"] * 1.19,
             bench=bench(server["cpu"]),
             description=" | ".join(server["description"]),
-            #description=server["cpu"],
         ))
 
     candidates.sort(key=lambda c: c.bench / c.price)
