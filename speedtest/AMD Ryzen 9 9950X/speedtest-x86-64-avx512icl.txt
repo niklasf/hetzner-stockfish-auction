@@ -1,0 +1,24 @@
+Stockfish dev-20260307-b3a810a1 by the Stockfish developers (see AUTHORS file)
+speedtest
+info string Using 32 threads
+Warmup position 3/3
+Position 258/258
+===========================
+Version                    : Stockfish dev-20260307-b3a810a1
+Compiled by                : g++ (GNUC) 15.2.1 on Linux
+Compilation architecture   : x86-64-avx512icl
+Compilation settings       : 64bit AVX512ICL VNNI AVX512 BMI2 AVX2 SSE41 SSSE3 SSE2 POPCNT
+Compiler __VERSION__ macro : 15.2.1 20260209
+Large pages                : yes
+User invocation            : speedtest
+Filled invocation          : speedtest 32 4096 150
+Available processors       : 0-31
+Thread count               : 32
+Thread binding             : none
+TT size [MiB]              : 4096
+Hash max, avg [per mille]  :
+    single search          : 52, 28
+    single game            : 769, 540
+Total nodes searched       : 5749491492
+Total search time [s]      : 149.894
+Nodes/second               : 38357048
