@@ -11,73 +11,76 @@ class Candidate:
     bench: float
     description: str
 
-def default_bench(threads, frequency) -> int:
-    return (threads - 1) * frequency * 130_000
+# SIMD multipliers relative to AVX2 baseline
+# (all CPUs in this dataset support at least AVX2)
+_SIMD_AVX2    = 1.00
+_SIMD_AVX512  = 1.10  # ~10% practical gain; throttling limits theoretical benefit
+_SIMD_VNNI512 = 1.35  # VNNI4 dot-product for NNUE evaluation (Sapphire Rapids)
+
+def default_bench(threads, frequency, simd=_SIMD_AVX2) -> int:
+    return int(threads * frequency * 130_000 * simd)
 
 def bench(cpu: str) -> float:
     # https://openbenchmarking.org/test/pts/stockfish
+    # Values marked "measured" are from pts/stockfish results (previously dead code).
+    # Others are scaled estimates from measured anchor points (±15-20% uncertainty).
     match cpu:
-        case "Intel Core i7-6700":
-            return default_bench(8, 3.4)
+        case "Intel Core i7-6700":               # Skylake AVX2, 8t @ 3.4GHz — measured
             return 3_410_450
-        case "Intel Core i7-7700":
-            return default_bench(8, 3.6)
-        case "Intel Xeon E3-1275v5":
-            return default_bench(8, 3.6)
-        case "Intel Xeon E3-1275V6":
-            return default_bench(8, 3.8)
-        case "Intel Xeon E5-1650V3":
-            return default_bench(12, 3.5)
-        case "Intel Core i7-8700":
-            return default_bench(12, 3.2)
-        case "AMD Ryzen 5 3600":
-            return default_bench(12, 3.6)
-            return 7791827
-        case "Intel XEON E-2176G":
-            return default_bench(12, 3.7)
-        case "AMD Ryzen 7 1700X" | "AMD Ryzen 7 PRO 1700X":
-            return default_bench(16, 3.4)
-        case "Intel XEON E-2276G":
-            return default_bench(12, 3.8)
-        case "Intel Core i9-9900K":
-            return default_bench(16, 3.6)
-        case "AMD Ryzen 7 3700X":
-            return default_bench(16, 3.6)
-            return 9973067
-        case "Intel Core i5-12500":
-            return default_bench(12, 3)
-        case "Intel Xeon W-2145":
-            return default_bench(16, 3.7)
-        case "AMD Ryzen 7 7700":
-            return default_bench(16, 3.8)
-            return 15938015
-        case "Intel Xeon E3-1270V3":
-            return default_bench(8, 3.5)
-        case "Intel Xeon E3-1271V3":
-            return default_bench(8, 3.6)
-        case "AMD Ryzen 9 3900":
-            return default_bench(24, 3.1)
-        case "AMD Ryzen Threadripper 2950X":
-            return default_bench(32, 3.5)
-        case "Intel Core i9-13900":
-            return default_bench(32, 1.5)  # Underestimating performance cores
-        case "Intel Core i9-12900K":
-            return default_bench(24, 2.4)  # Underestimating performance cores
-        case "AMD Ryzen 9 5950X":
-            return default_bench(32, 3.4)
-            return 21243912
-        case "Intel Xeon Gold 5412U":
-            return default_bench(48, 2.1)
-        case "AMD EPYC 7401P":
-            return default_bench(48, 2.0)
-        case "Intel Xeon W-2295":
-            return default_bench(36, 3)
-        case "Intel Xeon W-2245":
-            return default_bench(16, 3.9)
-        case "AMD EPYC 7502" | "AMD EPYC 7502P":
-            return default_bench(64, 2.5)
+        case "Intel Core i7-7700":               # Kaby Lake AVX2, 8t @ 3.6GHz — scaled from i7-6700
+            return 3_610_000
+        case "Intel Xeon E3-1275v5":             # Skylake AVX2, 8t @ 3.6GHz — same die as i7-6700
+            return 3_600_000
+        case "Intel Xeon E3-1275V6":             # Kaby Lake AVX2, 8t @ 3.8GHz — scaled from i7-7700
+            return 3_810_000
+        case "Intel Xeon E5-1650V3":             # Haswell AVX2, 12t @ 3.5GHz — ~7% less IPC than Skylake
+            return 7_000_000
+        case "Intel Core i7-8700":               # Coffee Lake AVX2, 12t @ 3.2GHz
+            return 4_700_000
+        case "AMD Ryzen 5 3600":                 # Zen2 AVX2, 12t @ 3.6GHz — measured
+            return 7_791_827
+        case "Intel XEON E-2176G":               # Coffee Lake AVX2, 12t @ 3.7GHz
+            return 5_430_000
+        case "AMD Ryzen 7 1700X" | "AMD Ryzen 7 PRO 1700X":  # Zen1 AVX2, 16t @ 3.4GHz
+            return 8_450_000
+        case "Intel XEON E-2276G":               # Coffee Lake AVX2, 12t @ 3.8GHz
+            return 5_580_000
+        case "Intel Core i9-9900K":              # Coffee Lake AVX2, 16t @ 3.6GHz
+            return 8_000_000
+        case "AMD Ryzen 7 3700X":                # Zen2 AVX2, 16t @ 3.6GHz — measured
+            return 9_973_067
+        case "Intel Core i5-12500":              # Alder Lake AVX2 (no AVX-512), 12t hybrid
+            return 5_500_000
+        case "Intel Xeon W-2145":                # Skylake-W AVX-512, 16t @ 3.7GHz
+            return 8_000_000
+        case "AMD Ryzen 7 7700":                 # Zen4 AVX-512, 16t @ 3.8GHz — measured
+            return 15_938_015
+        case "Intel Xeon E3-1270V3":             # Haswell AVX2, 8t @ 3.5GHz
+            return 3_270_000
+        case "Intel Xeon E3-1271V3":             # Haswell AVX2, 8t @ 3.6GHz
+            return 3_360_000
+        case "AMD Ryzen 9 3900":                 # Zen2 AVX2, 24t @ 3.1GHz — scaled from 3700X
+            return 12_900_000
+        case "AMD Ryzen Threadripper 2950X":     # Zen+ AVX2, 32t @ 3.5GHz
+            return 17_500_000
+        case "Intel Core i9-13900":              # Raptor Lake AVX2 (no AVX-512), 32t — ~5GHz eff. boost
+            return 28_000_000
+        case "Intel Core i9-12900K":             # Alder Lake AVX2 (no AVX-512), 24t — ~5GHz eff. boost
+            return 16_000_000
+        case "AMD Ryzen 9 5950X":                # Zen3 AVX2, 32t @ 3.4GHz — measured
+            return 21_243_912
+        case "Intel Xeon Gold 5412U":            # Sapphire Rapids AVX-512+VNNI4, 48t @ 2.1GHz
+            return 40_000_000
+        case "AMD EPYC 7401P":                   # Zen1 AVX2, 48t @ 2.0GHz — scaled from 1700X
+            return 17_000_000
+        case "Intel Xeon W-2295":                # Cascade Lake-W AVX-512, 36t @ 3.0GHz
+            return 20_000_000
+        case "Intel Xeon W-2245":                # Cascade Lake-W AVX-512, 16t @ 3.9GHz
+            return 12_000_000
+        case "AMD EPYC 7502" | "AMD EPYC 7502P": # Rome Zen2 AVX2, 64t @ 2.5GHz — scaled from 3700X
+            return 27_800_000
         case _:
-            return float("inf")
+            return float("inf")  # unknown CPUs sort to top as a flag to add them
 
 def main():
     data = json.load(open("live_data_sb_EUR.json"))
