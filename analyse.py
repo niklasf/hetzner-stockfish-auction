@@ -3,6 +3,7 @@
 import json
 import dataclasses
 
+
 @dataclasses.dataclass
 class Candidate:
     id: int
@@ -10,6 +11,7 @@ class Candidate:
     price: int
     bench: float
     description: str
+
 
 # SIMD multipliers relative to AVX2 baseline, calibrated from speedtest measurements.
 # AMD (Zen4/5): two 256-bit pipes emulating AVX-512, modest gain.
@@ -30,6 +32,7 @@ _SIMD_AVX2     = 1.00
 _SIMD_AVXVNNI  = 1.017  # Intel consumer Raptor/Alder Lake, measured on i9-13900
 _SIMD_AVX512   = 1.07   # AMD Zen4+Zen5 avg; Intel native AVX-512 assumed same
 _SIMD_VNNI512  = 1.10   # AMD Zen4+Zen5 avg best build; Intel 512-bit VNNI (SPR) unmeasured
+
 
 # 1 thread is reserved for plumbing (OS, Stockfish I/O thread, etc.).
 # The remaining threads run slightly super-linearly: dropping 1 thread from N costs
@@ -119,6 +122,7 @@ def bench(cpu: str) -> float:
         case _:
             return float("inf")  # unknown CPU — flags at top of output for follow-up
 
+
 def main():
     data = json.load(open("live_data_sb_EUR.json"))
 
@@ -136,7 +140,8 @@ def main():
     candidates.sort(key=lambda c: c.bench / c.price)
 
     for c in candidates:
-        print(c.id, c.bench / c.price, f"{c.price} €", c.description, sep=" | ")
+        print(f"{c.bench / c.price:.0f} nps/€", f"{c.price:.2f} €", c.description, sep=" | ")
+
 
 if __name__ == "__main__":
     main()
