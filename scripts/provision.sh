@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
 apt update && apt install -y ca-certificates curl
 
@@ -30,6 +30,8 @@ git clone https://github.com/official-stockfish/docker-fishtest.git
 (cd Stockfish/src && make clean && make -j profile-build ARCH=x86-64-avx512 EXE=stockfish-x86-64-avx512 || echo "ERROR: no avx512")
 (cd Stockfish/src && make clean && make -j profile-build ARCH=x86-64-vnni512 EXE=stockfish-x86-64-vnni512 || echo "ERROR: no vnni512")
 (cd Stockfish/src && make clean && make -j profile-build ARCH=x86-64-avx512icl EXE=stockfish-x86-64-avx512icl || echo "ERROR: no avx512icl")
+
+read -p "consider rebooting"
 
 mkdir -p speedtest
 cat /proc/cpuinfo > speedtest/cpuinfo.txt
