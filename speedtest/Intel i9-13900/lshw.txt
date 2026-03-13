@@ -1,0 +1,617 @@
+beta
+    description: System
+    vendor: Hetzner
+    version: 1.0
+    serial: To Be Filled By O.E.M.
+    width: 64 bits
+    capabilities: smbios-3.6.0 dmi-3.6.0 smp vsyscall32
+    configuration: boot=normal chassis=server uuid=eceaeae8-7a0e-44a7-8b6d-a8a159c28b01
+  *-core
+       description: Motherboard
+       product: W680D4U-1L
+       vendor: ASRockRack
+       physical id: 0
+     *-firmware
+          description: BIOS
+          vendor: American Megatrends International, LLC.
+          physical id: 0
+          version: 10.36
+          date: 07/21/2025
+          size: 64KiB
+          capacity: 32MiB
+          capabilities: pci upgrade shadowing cdboot bootselect socketedrom edd acpi biosbootspecification uefi
+     *-memory
+          description: System Memory
+          physical id: 1c
+          slot: System board or motherboard
+          size: 64GiB
+          capabilities: ecc
+          configuration: errordetection=ecc
+        *-bank:0
+             description: [empty]
+             physical id: 0
+             slot: Controller0-ChannelA-DIMM0
+        *-bank:1
+             description: DIMM Synchronous 4800 MHz (0.2 ns)
+             product: M324R4GA3BB0-CQKOL
+             vendor: Samsung
+             physical id: 1
+             serial: 03E247DF
+             slot: Controller0-ChannelA-DIMM1
+             size: 32GiB
+             width: 64 bits
+             clock: 505MHz (2.0ns)
+        *-bank:2
+             description: [empty]
+             physical id: 2
+             slot: Controller1-ChannelA-DIMM0
+        *-bank:3
+             description: DIMM Synchronous 4800 MHz (0.2 ns)
+             product: M324R4GA3BB0-CQKOL
+             vendor: Samsung
+             physical id: 3
+             serial: 03E24696
+             slot: Controller1-ChannelA-DIMM1
+             size: 32GiB
+             width: 64 bits
+             clock: 505MHz (2.0ns)
+     *-cache:0
+          description: L1 cache
+          physical id: 29
+          slot: L1 Cache
+          size: 384KiB
+          capacity: 384KiB
+          capabilities: synchronous internal write-back data
+          configuration: level=1
+     *-cache:1
+          description: L1 cache
+          physical id: 2a
+          slot: L1 Cache
+          size: 256KiB
+          capacity: 256KiB
+          capabilities: synchronous internal write-back instruction
+          configuration: level=1
+     *-cache:2
+          description: L2 cache
+          physical id: 2b
+          slot: L2 Cache
+          size: 16MiB
+          capacity: 16MiB
+          capabilities: synchronous internal write-back unified
+          configuration: level=2
+     *-cache:3
+          description: L3 cache
+          physical id: 2c
+          slot: L3 Cache
+          size: 36MiB
+          capacity: 36MiB
+          capabilities: synchronous internal write-back unified
+          configuration: level=3
+     *-cache:4
+          description: L1 cache
+          physical id: 2d
+          slot: L1 Cache
+          size: 512KiB
+          capacity: 512KiB
+          capabilities: synchronous internal write-back data
+          configuration: level=1
+     *-cache:5
+          description: L1 cache
+          physical id: 2e
+          slot: L1 Cache
+          size: 1MiB
+          capacity: 1MiB
+          capabilities: synchronous internal write-back instruction
+          configuration: level=1
+     *-cache:6
+          description: L2 cache
+          physical id: 2f
+          slot: L2 Cache
+          size: 16MiB
+          capacity: 16MiB
+          capabilities: synchronous internal write-back unified
+          configuration: level=2
+     *-cache:7
+          description: L3 cache
+          physical id: 30
+          slot: L3 Cache
+          size: 36MiB
+          capacity: 36MiB
+          capabilities: synchronous internal write-back unified
+          configuration: level=3
+     *-cpu
+          description: CPU
+          product: 13th Gen Intel(R) Core(TM) i9-13900
+          vendor: Intel Corp.
+          physical id: 31
+          bus info: cpu@0
+          version: 6.183.1
+          serial: To Be Filled By O.E.M.
+          slot: CPU1
+          size: 5308MHz
+          width: 64 bits
+          clock: 100MHz
+          capabilities: lm fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp x86-64 constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves split_lock_detect user_shstk avx_vnni dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req hfi vnmi umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize pconfig arch_lbr ibt flush_l1d arch_capabilities cpufreq
+          configuration: cores=24 enabledcores=24 microcode=306 threads=32
+     *-pci
+          description: Host bridge
+          product: Intel Corporation
+          vendor: Intel Corporation
+          physical id: 100
+          bus info: pci@0000:00:00.0
+          version: 01
+          width: 32 bits
+          clock: 33MHz
+        *-display
+             description: VGA compatible controller
+             product: Raptor Lake-S GT1 [UHD Graphics 770]
+             vendor: Intel Corporation
+             physical id: 2
+             bus info: pci@0000:00:02.0
+             version: 04
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pciexpress msi pm vga_controller bus_master cap_list rom
+             configuration: driver=i915 latency=0
+             resources: iomemory:600-5ff iomemory:400-3ff irq:210 memory:6003000000-6003ffffff memory:4000000000-400fffffff ioport:7000(size=64) memory:c0000-dffff memory:4010000000-4016ffffff memory:4020000000-40ffffffff
+        *-pci:0
+             description: PCI bridge
+             product: Raptor Lake PCIe 4.0 Graphics Port
+             vendor: Intel Corporation
+             physical id: 6
+             bus info: pci@0000:00:06.0
+             version: 01
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:122 ioport:8000(size=4096) memory:82800000-829fffff ioport:6001e00000(size=10485760)
+        *-generic UNCLAIMED
+             description: System peripheral
+             product: GNA Scoring Accelerator module
+             vendor: Intel Corporation
+             physical id: 8
+             bus info: pci@0000:00:08.0
+             version: 01
+             width: 64 bits
+             clock: 33MHz
+             capabilities: msi pm bus_master cap_list
+             configuration: latency=0
+             resources: iomemory:600-5ff memory:600411d000-600411dfff
+        *-usb
+             description: USB controller
+             product: Alder Lake-S PCH USB 3.2 Gen 2x2 XHCI Controller
+             vendor: Intel Corporation
+             physical id: 14
+             bus info: pci@0000:00:14.0
+             version: 11
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm msi xhci cap_list
+             configuration: driver=xhci_hcd latency=0
+             resources: iomemory:600-5ff irq:201 memory:6004100000-600410ffff
+           *-usbhost:0
+                product: xHCI Host Controller
+                vendor: Linux 6.12.74+deb13+1-amd64 xhci-hcd
+                physical id: 0
+                bus info: usb@1
+                logical name: usb1
+                version: 6.12
+                capabilities: usb-2.00
+                configuration: driver=hub slots=16 speed=480Mbit/s
+           *-usbhost:1
+                product: xHCI Host Controller
+                vendor: Linux 6.12.74+deb13+1-amd64 xhci-hcd
+                physical id: 1
+                bus info: usb@2
+                logical name: usb2
+                version: 6.12
+                capabilities: usb-3.10
+                configuration: driver=hub slots=10 speed=10000Mbit/s
+        *-memory UNCLAIMED
+             description: RAM memory
+             product: Alder Lake-S PCH Shared SRAM
+             vendor: Intel Corporation
+             physical id: 14.2
+             bus info: pci@0000:00:14.2
+             version: 11
+             width: 64 bits
+             clock: 33MHz (30.3ns)
+             capabilities: pm bus_master cap_list
+             configuration: latency=0
+             resources: iomemory:600-5ff iomemory:600-5ff memory:6004114000-6004117fff memory:600411c000-600411cfff
+        *-serial:0
+             description: Serial bus controller
+             product: Alder Lake-S PCH Serial IO I2C Controller #0
+             vendor: Intel Corporation
+             physical id: 15
+             bus info: pci@0000:00:15.0
+             version: 11
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm bus_master cap_list
+             configuration: driver=intel-lpss latency=0
+             resources: irq:27 memory:4017000000-4017000fff
+        *-serial:1
+             description: Serial bus controller
+             product: Alder Lake-S PCH Serial IO I2C Controller #1
+             vendor: Intel Corporation
+             physical id: 15.1
+             bus info: pci@0000:00:15.1
+             version: 11
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm bus_master cap_list
+             configuration: driver=intel-lpss latency=0
+             resources: irq:40 memory:4017001000-4017001fff
+        *-communication UNCLAIMED
+             description: Communication controller
+             product: Alder Lake-S PCH HECI Controller #1
+             vendor: Intel Corporation
+             physical id: 16
+             bus info: pci@0000:00:16.0
+             version: 11
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm msi cap_list
+             configuration: latency=0
+             resources: iomemory:600-5ff memory:6004119000-6004119fff
+        *-sata
+             description: SATA controller
+             product: Alder Lake-S PCH SATA Controller [AHCI Mode]
+             vendor: Intel Corporation
+             physical id: 17
+             bus info: pci@0000:00:17.0
+             version: 11
+             width: 32 bits
+             clock: 66MHz
+             capabilities: sata msi pm ahci_1.0 bus_master cap_list
+             configuration: driver=ahci latency=0
+             resources: irq:209 memory:82700000-82701fff memory:82703000-827030ff ioport:7090(size=8) ioport:7080(size=4) ioport:7060(size=32) memory:82702000-827027ff
+        *-pci:1
+             description: PCI bridge
+             product: Alder Lake-S PCH PCI Express Root Port #25
+             vendor: Intel Corporation
+             physical id: 1a
+             bus info: pci@0000:00:1a.0
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:123 ioport:6000(size=4096) memory:81c00000-825fffff ioport:6001400000(size=10485760)
+        *-pci:2
+             description: PCI bridge
+             product: Intel Corporation
+             vendor: Intel Corporation
+             physical id: 1b
+             bus info: pci@0000:00:1b.0
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:124
+        *-pci:3
+             description: PCI bridge
+             product: Alder Lake-S PCH PCI Express Root Port #21
+             vendor: Intel Corporation
+             physical id: 1b.4
+             bus info: pci@0000:00:1b.4
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:125 ioport:5000(size=4096) memory:81200000-81bfffff ioport:6000a00000(size=10485760)
+           *-nvme
+                description: NVMe device
+                product: SAMSUNG MZQL21T9HCJR-00A07
+                vendor: Samsung Electronics Co Ltd
+                physical id: 0
+                bus info: pci@0000:04:00.0
+                logical name: /dev/nvme0
+                version: GDC5A02Q
+                serial: S64GNN0TB02110
+                width: 64 bits
+                clock: 33MHz
+                capabilities: nvme pm msi pciexpress msix nvm_express bus_master cap_list rom
+                configuration: driver=nvme latency=0 nqn=nqn.1994-11.com.samsung:nvme:PM9A3:2.5-inch:S64GNN0TB02110 state=live
+                resources: irq:16 memory:81210000-81213fff memory:81200000-8120ffff
+              *-namespace:0
+                   description: NVMe disk
+                   physical id: 0
+                   logical name: hwmon1
+              *-namespace:1
+                   description: NVMe disk
+                   physical id: 2
+                   logical name: /dev/ng0n1
+              *-namespace:2
+                   description: NVMe disk
+                   physical id: 1
+                   bus info: nvme@0:1
+                   logical name: /dev/nvme0n1
+                   size: 1788GiB (1920GB)
+                   capabilities: gpt-1.00 partitioned partitioned:gpt
+                   configuration: guid=f0ae0626-0120-4e8a-8d05-33ad348d28b8 logicalsectorsize=512 sectorsize=4096 wwid=eui.3634473054b021100025384e00000006
+                 *-volume:0
+                      description: Windows FAT volume
+                      vendor: mkfs.fat
+                      physical id: 1
+                      bus info: nvme@0:1,1
+                      logical name: /dev/nvme0n1p1
+                      version: FAT16
+                      serial: c440-d9ce
+                      size: 255MiB
+                      capacity: 255MiB
+                      capabilities: boot fat initialized
+                      configuration: FATs=2 filesystem=fat
+                 *-volume:1
+                      description: RAID partition
+                      vendor: Linux
+                      physical id: 2
+                      bus info: nvme@0:1,2
+                      logical name: /dev/nvme0n1p2
+                      serial: 043943ea-e831-4560-b98d-c7aea8542584
+                      capacity: 31GiB
+                      capabilities: multi
+                 *-volume:2
+                      description: RAID partition
+                      vendor: Linux
+                      physical id: 3
+                      bus info: nvme@0:1,3
+                      logical name: /dev/nvme0n1p3
+                      serial: d4deefcb-e231-4fcc-9c1f-5dbdb1053e62
+                      capacity: 1023MiB
+                      capabilities: multi
+                 *-volume:3
+                      description: RAID partition
+                      vendor: Linux
+                      physical id: 4
+                      bus info: nvme@0:1,4
+                      logical name: /dev/nvme0n1p4
+                      serial: cc776195-3676-4238-beab-eabc02715d00
+                      capacity: 1755GiB
+                      capabilities: multi
+        *-pci:4
+             description: PCI bridge
+             product: Alder Lake-S PCH PCI Express Root Port #1
+             vendor: Intel Corporation
+             physical id: 1c
+             bus info: pci@0000:00:1c.0
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:126
+        *-pci:5
+             description: PCI bridge
+             product: Alder Lake-S PCH PCI Express Root Port #6
+             vendor: Intel Corporation
+             physical id: 1c.5
+             bus info: pci@0000:00:1c.5
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:127 ioport:4000(size=4096) memory:82600000-826fffff
+           *-network
+                description: Ethernet interface
+                product: I210 Gigabit Network Connection
+                vendor: Intel Corporation
+                physical id: 0
+                bus info: pci@0000:06:00.0
+                logical name: enp6s0
+                version: 03
+                serial: a8:a1:59:c2:8b:01
+                size: 1Gbit/s
+                capacity: 1Gbit/s
+                width: 32 bits
+                clock: 33MHz
+                capabilities: pm msi msix pciexpress bus_master cap_list ethernet physical tp 10bt 10bt-fd 100bt 100bt-fd 1000bt-fd autonegotiation
+                configuration: autonegotiation=on broadcast=yes driver=igb driverversion=6.12.74+deb13+1-amd64 duplex=full firmware=3.25, 0x800005cb ip=65.109.157.97 latency=0 link=yes multicast=yes port=twisted pair speed=1Gbit/s
+                resources: irq:17 memory:82600000-8267ffff ioport:4000(size=32) memory:82680000-82683fff
+        *-pci:6
+             description: PCI bridge
+             product: Alder Lake-S PCH PCI Express Root Port #9
+             vendor: Intel Corporation
+             physical id: 1d
+             bus info: pci@0000:00:1d.0
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:128
+        *-pci:7
+             description: PCI bridge
+             product: Alder Lake-S PCH PCI Express Root Port #13
+             vendor: Intel Corporation
+             physical id: 1d.4
+             bus info: pci@0000:00:1d.4
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:129 ioport:3000(size=4096) memory:80800000-811fffff ioport:6000000000(size=10485760)
+           *-nvme
+                description: NVMe device
+                product: SAMSUNG MZQL21T9HCJR-00A07
+                vendor: Samsung Electronics Co Ltd
+                physical id: 0
+                bus info: pci@0000:08:00.0
+                logical name: /dev/nvme1
+                version: GDC5A02Q
+                serial: S64GNN0TB02113
+                width: 64 bits
+                clock: 33MHz
+                capabilities: nvme pm msi pciexpress msix nvm_express bus_master cap_list rom
+                configuration: driver=nvme latency=0 nqn=nqn.1994-11.com.samsung:nvme:PM9A3:2.5-inch:S64GNN0TB02113 state=live
+                resources: irq:16 memory:80810000-80813fff memory:80800000-8080ffff
+              *-namespace:0
+                   description: NVMe disk
+                   physical id: 0
+                   logical name: hwmon2
+              *-namespace:1
+                   description: NVMe disk
+                   physical id: 2
+                   logical name: /dev/ng1n1
+              *-namespace:2
+                   description: NVMe disk
+                   physical id: 1
+                   bus info: nvme@1:1
+                   logical name: /dev/nvme1n1
+                   size: 1788GiB (1920GB)
+                   capabilities: gpt-1.00 partitioned partitioned:gpt
+                   configuration: guid=03bd3762-6005-4433-af0a-d5de972e33d9 logicalsectorsize=512 sectorsize=4096 wwid=eui.3634473054b021130025384e00000006
+                 *-volume:0
+                      description: Windows FAT volume
+                      vendor: mkfs.fat
+                      physical id: 1
+                      bus info: nvme@1:1,1
+                      logical name: /dev/nvme1n1p1
+                      version: FAT16
+                      serial: c440-d9ce
+                      size: 255MiB
+                      capacity: 255MiB
+                      capabilities: boot fat initialized
+                      configuration: FATs=2 filesystem=fat
+                 *-volume:1
+                      description: RAID partition
+                      vendor: Linux
+                      physical id: 2
+                      bus info: nvme@1:1,2
+                      logical name: /dev/nvme1n1p2
+                      serial: 187f37bc-6aa9-4457-a066-fa400fd9f523
+                      capacity: 31GiB
+                      capabilities: multi
+                 *-volume:2
+                      description: RAID partition
+                      vendor: Linux
+                      physical id: 3
+                      bus info: nvme@1:1,3
+                      logical name: /dev/nvme1n1p3
+                      serial: 552900d6-875d-4943-9406-4c9f341ca43c
+                      capacity: 1023MiB
+                      capabilities: multi
+                 *-volume:3
+                      description: RAID partition
+                      vendor: Linux
+                      physical id: 4
+                      bus info: nvme@1:1,4
+                      logical name: /dev/nvme1n1p4
+                      serial: cf0ed036-4404-48d6-9b8f-2b1e4e9d915f
+                      capacity: 1755GiB
+                      capabilities: multi
+        *-isa
+             description: ISA bridge
+             product: Intel Corporation
+             vendor: Intel Corporation
+             physical id: 1f
+             bus info: pci@0000:00:1f.0
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             capabilities: isa bus_master
+             configuration: latency=0
+           *-pnp00:00
+                product: PnP device PNP0c02
+                physical id: 0
+                capabilities: pnp
+                configuration: driver=system
+           *-pnp00:01
+                product: PnP device PNP0c02
+                physical id: 1
+                capabilities: pnp
+                configuration: driver=system
+           *-pnp00:02
+                product: PnP device PNP0c02
+                physical id: 2
+                capabilities: pnp
+                configuration: driver=system
+           *-pnp00:03
+                product: PnP device PNP0c02
+                physical id: 3
+                capabilities: pnp
+                configuration: driver=system
+           *-pnp00:04
+                product: PnP device PNP0c02
+                physical id: 4
+                capabilities: pnp
+                configuration: driver=system
+           *-pnp00:05
+                product: PnP device PNP0c02
+                physical id: 5
+                capabilities: pnp
+                configuration: driver=system
+        *-multimedia
+             description: Audio device
+             product: Alder Lake-S HD Audio Controller
+             vendor: Intel Corporation
+             physical id: 1f.3
+             bus info: pci@0000:00:1f.3
+             logical name: card0
+             logical name: /dev/snd/controlC0
+             version: 11
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm msi bus_master cap_list
+             configuration: driver=snd_hda_intel latency=32
+             resources: iomemory:600-5ff iomemory:600-5ff irq:211 memory:6004110000-6004113fff memory:6004000000-60040fffff
+        *-serial:2
+             description: SMBus
+             product: Alder Lake-S PCH SMBus Controller
+             vendor: Intel Corporation
+             physical id: 1f.4
+             bus info: pci@0000:00:1f.4
+             version: 11
+             width: 64 bits
+             clock: 33MHz
+             configuration: driver=i801_smbus latency=0
+             resources: iomemory:600-5ff irq:18 memory:6004118000-60041180ff ioport:efa0(size=32)
+        *-serial:3 UNCLAIMED
+             description: Serial bus controller
+             product: Alder Lake-S PCH SPI Controller
+             vendor: Intel Corporation
+             physical id: 1f.5
+             bus info: pci@0000:00:1f.5
+             version: 11
+             width: 32 bits
+             clock: 33MHz
+             configuration: latency=0
+             resources: memory:82704000-82704fff
+  *-power UNCLAIMED
+       description: To Be Filled By O.E.M.
+       product: To Be Filled By O.E.M.
+       vendor: To Be Filled By O.E.M.
+       physical id: 1
+       version: To Be Filled By O.E.M.
+       serial: To Be Filled By O.E.M.
+       capacity: 32768mWh
+  *-input:0
+       product: Sleep Button
+       physical id: 2
+       logical name: input0
+       logical name: /dev/input/event0
+       capabilities: platform
+  *-input:1
+       product: Power Button
+       physical id: 3
+       logical name: input1
+       logical name: /dev/input/event1
+       capabilities: platform
+  *-input:2
+       product: Power Button
+       physical id: 4
+       logical name: input2
+       logical name: /dev/input/event2
+       capabilities: platform
+  *-input:3
+       product: Video Bus
+       physical id: 5
+       logical name: input3
+       logical name: /dev/input/event3
+       capabilities: platform
