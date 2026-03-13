@@ -11,16 +11,20 @@ class Candidate:
     bench: float
     description: str
 
-# SIMD multipliers relative to AVX2 baseline, calibrated from speedtest measurements
-# on Ryzen 7 7700 (Zen4) and Ryzen 9 9950X (Zen5):
+# SIMD multipliers relative to AVX2 baseline, calibrated from speedtest measurements.
+# AMD (Zen4/5): two 256-bit pipes emulating AVX-512, modest gain.
 #   Zen4: avx512 +5.4%, vnni512 +6.9%, avx512icl +6.0%
 #   Zen5: avx512 +8.3%, vnni512 +10.7%, avx512icl +13.3%
-# AMD Zen4/5 implement AVX-512 as two 256-bit pipes, limiting gain vs native.
-# Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids) is unmeasured;
-# using same factors as conservative estimate.
-_SIMD_AVX2    = 1.00
-_SIMD_AVX512  = 1.07   # avg across Zen4+Zen5 avx512 builds
-_SIMD_VNNI512 = 1.10   # avg across Zen4+Zen5 best builds; Intel VNNI may be higher
+# Intel consumer hybrid (Raptor Lake / Alder Lake): avxvnni is best supported arch;
+#   avx512 / avx512icl NOT supported. avxvnni is 128-bit VEX-encoded VNNI, much
+#   smaller gain than full 512-bit VNNI.
+#   i9-13900 measured: avxvnni +1.69% over avx2.
+# Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids): unmeasured;
+#   using AMD avx512 factor as conservative estimate.
+_SIMD_AVX2     = 1.00
+_SIMD_AVXVNNI  = 1.017  # Intel consumer Raptor/Alder Lake, measured on i9-13900
+_SIMD_AVX512   = 1.07   # AMD Zen4+Zen5 avg; Intel native AVX-512 assumed same
+_SIMD_VNNI512  = 1.10   # AMD Zen4+Zen5 avg best build; Intel 512-bit VNNI (SPR) unmeasured
 
 # 1 thread is reserved for plumbing (OS, Stockfish I/O thread, etc.).
 # The remaining threads run slightly super-linearly: dropping 1 thread from N costs
@@ -76,8 +80,8 @@ def bench(cpu: str) -> float:
             return 8_476_000              # ~ × ratio(16)
         case "AMD Ryzen 7 3700X":         # Zen2, AVX2, 16t @ 3.6 GHz
             return 10_567_000             # ○ × ratio(16)
-        case "Intel Core i5-12500":       # Alder Lake, AVX2 only (no AVX-512), 12t hybrid
-            return 5_772_000              # ~ × ratio(12)
+        case "Intel Core i5-12500":       # Alder Lake, avxvnni best (no AVX-512), 12t pure P-cores
+            return 5_870_000              # ~ × ratio(12) × _SIMD_AVXVNNI; no E-cores
         case "Intel Xeon W-2145":         # Skylake-W, AVX-512 native, 16t @ 3.7 GHz
             return 9_070_000              # ~ avx2 × 1.086 × _SIMD_AVX512 × ratio(16)
         case "AMD Ryzen 7 7700":          # Zen4, AVX-512, 16t @ 3.8 GHz
@@ -90,10 +94,11 @@ def bench(cpu: str) -> float:
             return 13_789_000             # ~ × ratio(24)=0.984
         case "AMD Ryzen Threadripper 2950X":  # Zen+, AVX2, 32t @ 3.5 GHz
             return 18_786_000             # ~ × ratio(32)=0.989
-        case "Intel Core i9-13900":       # Raptor Lake, AVX2 only (no AVX-512), 32t hybrid
-            return 30_057_000             # ~ boost-clock estimate × ratio(32)
-        case "Intel Core i9-12900K":      # Alder Lake, AVX2 only (no AVX-512), 24t hybrid
-            return 17_104_000             # ~ boost-clock estimate × ratio(24)
+        case "Intel Core i9-13900":       # Raptor Lake, avxvnni best (no AVX-512), 8P+16E=32t
+            return 18_662_000             # ★ speedtest avxvnni, 31t (1 reserved)
+                                          # E-cores contribute ~3.5M total; P-cores ~15.4M
+        case "Intel Core i9-12900K":      # Alder Lake, avxvnni best (no AVX-512), 8P+8E=24t
+            return 16_707_000             # ~ derived from i9-13900: P-core×0.97 + 8×E-thread
         case "AMD Ryzen 9 5950X":         # Zen3, AVX2, 32t @ 3.4 GHz
             return 22_805_000             # ○ × ratio(32)
         case "Intel Xeon Gold 5412U":     # Sapphire Rapids, VNNI4 native, 48t @ 2.1 GHz

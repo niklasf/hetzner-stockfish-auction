@@ -39,7 +39,12 @@ From speedtest on Ryzen 7 7700 (Zen4) and Ryzen 9 9950X (Zen5):
 AMD Zen4/5 implement AVX-512 as two 256-bit pipes — gains are modest.
 Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids) applies the same factors as a conservative estimate; **unmeasured**.
 
-**Note:** Alder Lake (i5-12500, i9-12900K) and Raptor Lake (i9-13900) consumer SKUs do **not** support AVX-512 — AVX2 only.
+**Intel consumer hybrid (Raptor Lake / Alder Lake) — critical finding:**
+- These CPUs do **not** support AVX-512. Best Stockfish build is `x86-64-avxvnni`.
+- avxvnni is 128-bit VEX-encoded VNNI — measured gain over avx2: only **+1.69%** (i9-13900).
+- E-cores (Efficient cores) contribute negligibly to Stockfish throughput. On the i9-13900 (8P+16E), the marginal last thread adds only ~216k N/s (1.1% of total). All 16 E-cores together contribute ~3.5M N/s; the 8 P-cores contribute ~15.4M N/s.
+- Consequence: i9-13900 actual = **18.7M N/s** — the old boost-clock estimate (30M) was 38% too high.
+- Apply same model to i9-12900K (8P+8E): fewer E-cores, P-core ~3% slower → ~16.7M N/s.
 
 ## Plumbing thread model
 
@@ -76,7 +81,7 @@ When adding a **new CPU** not yet in the match:
 
 Priority targets for future benchmarking:
 
-1. **Intel Core i9-13900** — current top-ranked, estimate is rough (hybrid P+E core arch, boost-clock based). A measurement would confirm or overturn the top pick.
+1. ~~**Intel Core i9-13900**~~ — **measured**. Was 38% overestimated; no longer top-ranked.
 2. **AMD Ryzen 5 3600** — most common CPU in auction (144 servers); would validate Zen2 scaling factor affecting 3700X, Ryzen 9 3900, EPYC 7502 estimates too.
 3. **Intel Xeon W-2295** — 50 servers, would provide first Intel native AVX-512 calibration data point.
 
