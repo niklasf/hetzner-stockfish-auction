@@ -21,6 +21,11 @@ class Candidate:
 #   i9-13900 measured: avxvnni +1.69% over avx2.
 # Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids): unmeasured;
 #   using AMD avx512 factor as conservative estimate.
+# Build selection rule:
+#   AMD pre-Zen5: PEXT/PDEP is microcode-emulated → bmi2 is SLOWER than avx2; use avx2
+#                 (confirmed: EPYC 7502P bmi2 was 8.9% slower; 9950X/Zen5 bmi2 was +1.1%)
+#   AMD Zen5+:    PEXT/PDEP is hardware → bmi2 fine, but avx512icl/vnni512 still better
+#   Intel:        PEXT/PDEP is hardware since Haswell → bmi2 fine
 _SIMD_AVX2     = 1.00
 _SIMD_AVXVNNI  = 1.017  # Intel consumer Raptor/Alder Lake, measured on i9-13900
 _SIMD_AVX512   = 1.07   # AMD Zen4+Zen5 avg; Intel native AVX-512 assumed same
@@ -110,7 +115,7 @@ def bench(cpu: str) -> float:
         case "Intel Xeon W-2245":         # Cascade Lake-W, AVX-512 native, 16t @ 3.9 GHz
             return 13_604_000             # ~ base × 1.086 × _SIMD_AVX512 × ratio(16)
         case "AMD EPYC 7502" | "AMD EPYC 7502P":  # Rome/Zen2, AVX2, 64t @ 2.5 GHz
-            return 30_022_000             # ~ × ratio(64)=0.994
+            return 34_275_000             # ★ speedtest avx2, 63t (1 reserved)
         case _:
             return float("inf")  # unknown CPU — flags at top of output for follow-up
 

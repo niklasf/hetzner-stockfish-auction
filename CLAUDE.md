@@ -20,6 +20,8 @@ All values are in N/s matching `stockfish dev-20260307-b3a810a1` speedtest outpu
 **Measured directly (★)** — from files in `speedtest/`:
 - AMD Ryzen 7 7700: 17,879,000 N/s (15t avx512icl)
 - AMD Ryzen 9 9950X: not in auction dataset, used for SIMD calibration only
+- Intel Core i9-13900: 18,662,000 N/s (31t avxvnni)
+- AMD EPYC 7502P: 34,275,000 N/s (63t avx2) — bmi2 was 8.9% slower (see build rule below)
 
 **Scaled from pts/stockfish (○)** — openbenchmarking.org values × 1.086 × ratio(N):
 - i7-6700, Ryzen 5 3600, Ryzen 7 3700X, Ryzen 9 5950X
@@ -38,6 +40,11 @@ From speedtest on Ryzen 7 7700 (Zen4) and Ryzen 9 9950X (Zen5):
 
 AMD Zen4/5 implement AVX-512 as two 256-bit pipes — gains are modest.
 Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids) applies the same factors as a conservative estimate; **unmeasured**.
+
+**Stockfish build selection rule:**
+- **AMD pre-Zen5**: PEXT/PDEP is microcode-emulated → `bmi2` build is *slower* than `avx2`; always use `avx2` (or `avx512icl`/`vnni512` where supported). Confirmed: EPYC 7502P bmi2 was 8.9% slower than avx2.
+- **AMD Zen5+**: PEXT/PDEP is hardware → `bmi2` is fine, but `avx512icl`/`vnni512` still better.
+- **Intel**: PEXT/PDEP is hardware since Haswell → `bmi2` fine; use best AVX-512 build where supported.
 
 **Intel consumer hybrid (Raptor Lake / Alder Lake) — critical finding:**
 - These CPUs do **not** support AVX-512. Best Stockfish build is `x86-64-avxvnni`.
@@ -82,7 +89,7 @@ When adding a **new CPU** not yet in the match:
 Priority targets for future benchmarking:
 
 1. ~~**Intel Core i9-13900**~~ — **measured**. Was 38% overestimated; no longer top-ranked.
-2. **AMD Ryzen 5 3600** — most common CPU in auction (144 servers); would validate Zen2 scaling factor affecting 3700X, Ryzen 9 3900, EPYC 7502 estimates too.
+2. **AMD Ryzen 5 3600** — most common CPU in auction (144 servers); would validate Zen2 scaling (EPYC 7502P measured +14% over estimate, suggesting Zen2 pts/stockfish scale may be conservative).
 3. **Intel Xeon W-2295** — 50 servers, would provide first Intel native AVX-512 calibration data point.
 
 ## speedtest directory
