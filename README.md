@@ -3,7 +3,7 @@
 Find the most efficient auction prices for Stockfish analysis on
 [Hetzner Server Auctions](https://www.hetzner.com/sb/).
 
-Optimized for nodes/second per € at n-1 threads.
+Optimized for Stockfish 18 nodes/second per € at n-1 threads.
 
 Real measurements, but otherwise heavily vibe coded.
 
