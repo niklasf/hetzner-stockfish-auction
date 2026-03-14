@@ -7,8 +7,7 @@ Optimized for Stockfish 18 nodes/second per € at n-1 threads.
 
 Real measurements, but otherwise heavily vibe coded.
 
-Usage
------
+## Usage
 
 ```bash
 make update  # fetch live auction data
@@ -24,6 +23,6 @@ Example output (best results last):
 
 Does not include the cost of an IPv4 address.
 
-# License
+## License
 
 CC0
