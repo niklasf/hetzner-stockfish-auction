@@ -21,8 +21,9 @@ class Candidate:
 #   avx512 / avx512icl NOT supported. avxvnni is 128-bit VEX-encoded VNNI, much
 #   smaller gain than full 512-bit VNNI.
 #   i9-13900 measured: avxvnni +1.69% over avx2.
-# Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids): unmeasured;
-#   using AMD avx512 factor as conservative estimate.
+# Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids):
+#   W-2295 (Cascade Lake-W) measured avx512 +7.07% over avx2 → confirms _SIMD_AVX512 = 1.07.
+#   vnni512 was -0.96% vs avx512 on Cascade Lake-W; avx512 is best build for this arch.
 # Build selection rule:
 #   AMD pre-Zen5: PEXT/PDEP is microcode-emulated → bmi2 is SLOWER than avx2; use avx2
 #                 (confirmed: EPYC 7502P bmi2 was 8.9% slower; 9950X/Zen5 bmi2 was +1.1%)
@@ -30,7 +31,7 @@ class Candidate:
 #   Intel:        PEXT/PDEP is hardware since Haswell → bmi2 fine
 _SIMD_AVX2     = 1.00
 _SIMD_AVXVNNI  = 1.017  # Intel consumer Raptor/Alder Lake, measured on i9-13900
-_SIMD_AVX512   = 1.07   # AMD Zen4+Zen5 avg; Intel native AVX-512 assumed same
+_SIMD_AVX512   = 1.07   # AMD Zen4+Zen5 avg; confirmed Intel native AVX-512 (W-2295 Cascade Lake-W)
 _SIMD_VNNI512  = 1.10   # AMD Zen4+Zen5 avg best build; Intel 512-bit VNNI (SPR) unmeasured
 
 
@@ -114,9 +115,9 @@ def bench(cpu: str) -> float:
         case "AMD EPYC 7401P":            # Zen1, AVX2, 48t @ 2.0 GHz
             return 18_323_000             # ~ × ratio(48)
         case "Intel Xeon W-2295":         # Cascade Lake-W, AVX-512 native, 36t @ 3.0 GHz
-            return 23_003_000             # ~ base × 1.086 × _SIMD_AVX512 × ratio(36)=0.990
+            return 17_187_000             # ★ speedtest avx512, 35t (1 reserved)
         case "Intel Xeon W-2245":         # Cascade Lake-W, AVX-512 native, 16t @ 3.9 GHz
-            return 13_604_000             # ~ base × 1.086 × _SIMD_AVX512 × ratio(16)
+            return 9_577_000              # ~ W-2295 anchor × (15t/35t) × (3.9/3.0 GHz)
         case "AMD EPYC 7502" | "AMD EPYC 7502P":  # Rome/Zen2, AVX2, 64t @ 2.5 GHz
             return 34_275_000             # ★ speedtest avx2, 63t (1 reserved)
         case _:

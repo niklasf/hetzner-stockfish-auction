@@ -22,6 +22,7 @@ All values are in N/s matching `stockfish dev-20260307-b3a810a1` speedtest outpu
 - AMD Ryzen 9 9950X: not in auction dataset, used for SIMD calibration only
 - Intel Core i9-13900: 18,662,000 N/s (31t avxvnni)
 - AMD EPYC 7502P: 34,275,000 N/s (63t avx2) — bmi2 was 8.9% slower (see build rule below)
+- Intel Xeon W-2295: 17,187,000 N/s (35t avx512) — was 25% overestimated; validates _SIMD_AVX512=1.07 for Intel
 
 **Scaled from pts/stockfish (○)** — openbenchmarking.org values × 1.086 × ratio(N):
 - i7-6700, Ryzen 5 3600, Ryzen 7 3700X, Ryzen 9 5950X
@@ -39,7 +40,8 @@ From speedtest on Ryzen 7 7700 (Zen4) and Ryzen 9 9950X (Zen5):
 | vnni512/avx512icl vs avx2 | +6.9% | +13.3% | **1.10** |
 
 AMD Zen4/5 implement AVX-512 as two 256-bit pipes — gains are modest.
-Intel native AVX-512 (Skylake-W, Cascade Lake-W, Sapphire Rapids) applies the same factors as a conservative estimate; **unmeasured**.
+Intel native AVX-512 (Cascade Lake-W): W-2295 measured avx512 **+7.07%** over avx2 → confirms _SIMD_AVX512=1.07. vnni512 was -0.96% vs avx512 (within noise; avx512 is best build for Cascade Lake-W).
+Skylake-W and Sapphire Rapids: assumed same factor; unmeasured.
 
 **Stockfish build selection rule:**
 - **AMD pre-Zen5**: PEXT/PDEP is microcode-emulated → `bmi2` build is *slower* than `avx2`; always use `avx2` (or `avx512icl`/`vnni512` where supported). Confirmed: EPYC 7502P bmi2 was 8.9% slower than avx2.
@@ -90,7 +92,7 @@ Priority targets for future benchmarking:
 
 1. ~~**Intel Core i9-13900**~~ — **measured**. Was 38% overestimated; no longer top-ranked.
 2. **AMD Ryzen 5 3600** — most common CPU in auction (144 servers); would validate Zen2 scaling (EPYC 7502P measured +14% over estimate, suggesting Zen2 pts/stockfish scale may be conservative).
-3. **Intel Xeon W-2295** — 50 servers, would provide first Intel native AVX-512 calibration data point.
+3. ~~**Intel Xeon W-2295**~~ — **measured**. Was 25% overestimated; confirms _SIMD_AVX512=1.07 for Intel native AVX-512. W-2245 rescaled from this anchor.
 
 ## speedtest directory
 
