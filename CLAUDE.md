@@ -21,6 +21,7 @@ All values are in N/s matching `stockfish dev-20260307-b3a810a1` speedtest outpu
 - AMD Ryzen 7 7700: 17,879,000 N/s (15t avx512icl)
 - AMD Ryzen 9 9950X: not in auction dataset, used for SIMD calibration only
 - Intel Core i9-13900: 18,662,000 N/s (31t avxvnni)
+- AMD EPYC 7502: 33,787,000 N/s (63t avx2) — bmi2 was 8.7% slower
 - AMD EPYC 7502P: 34,275,000 N/s (63t avx2) — bmi2 was 8.9% slower (see build rule below)
 - Intel Xeon W-2295: 17,187,000 N/s (35t avx512) — was 25% overestimated; validates _SIMD_AVX512=1.07 for Intel
 
@@ -44,7 +45,7 @@ Intel native AVX-512 (Cascade Lake-W): W-2295 measured avx512 **+7.07%** over av
 Skylake-W and Sapphire Rapids: assumed same factor; unmeasured.
 
 **Stockfish build selection rule:**
-- **AMD pre-Zen5**: PEXT/PDEP is microcode-emulated → `bmi2` build is *slower* than `avx2`; always use `avx2` (or `avx512icl`/`vnni512` where supported). Confirmed: EPYC 7502P bmi2 was 8.9% slower than avx2.
+- **AMD pre-Zen5**: PEXT/PDEP is microcode-emulated → `bmi2` build is *slower* than `avx2`; always use `avx2` (or `avx512icl`/`vnni512` where supported). Confirmed: EPYC 7502P bmi2 was 8.9% slower, EPYC 7502 bmi2 was 8.7% slower than avx2.
 - **AMD Zen5+**: PEXT/PDEP is hardware → `bmi2` is fine, but `avx512icl`/`vnni512` still better.
 - **Intel**: PEXT/PDEP is hardware since Haswell → `bmi2` fine; use best AVX-512 build where supported.
 
@@ -91,7 +92,7 @@ When adding a **new CPU** not yet in the match:
 Priority targets for future benchmarking:
 
 1. ~~**Intel Core i9-13900**~~ — **measured**. Was 38% overestimated; no longer top-ranked.
-2. **AMD Ryzen 5 3600** — most common CPU in auction (144 servers); would validate Zen2 scaling (EPYC 7502P measured +14% over estimate, suggesting Zen2 pts/stockfish scale may be conservative).
+2. **AMD Ryzen 5 3600** — most common CPU in auction (144 servers); would validate Zen2 scaling (both EPYC 7502 variants measured +14% over estimate, suggesting Zen2 pts/stockfish scale may be conservative).
 3. ~~**Intel Xeon W-2295**~~ — **measured**. Was 25% overestimated; confirms _SIMD_AVX512=1.07 for Intel native AVX-512. W-2245 rescaled from this anchor.
 
 ## speedtest directory

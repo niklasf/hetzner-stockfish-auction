@@ -118,7 +118,9 @@ def bench(cpu: str) -> float:
             return 17_187_000             # ★ speedtest avx512, 35t (1 reserved)
         case "Intel Xeon W-2245":         # Cascade Lake-W, AVX-512 native, 16t @ 3.9 GHz
             return 9_577_000              # ~ W-2295 anchor × (15t/35t) × (3.9/3.0 GHz)
-        case "AMD EPYC 7502" | "AMD EPYC 7502P":  # Rome/Zen2, AVX2, 64t @ 2.5 GHz
+        case "AMD EPYC 7502":            # Rome/Zen2, AVX2, 64t @ 2.5 GHz
+            return 33_787_000             # ★ speedtest avx2, 63t (1 reserved); bmi2 was 8.7% slower
+        case "AMD EPYC 7502P":           # Rome/Zen2, AVX2, 64t @ 2.5 GHz
             return 34_275_000             # ★ speedtest avx2, 63t (1 reserved)
         case _:
             return float("inf")  # unknown CPU — flags at top of output for follow-up
