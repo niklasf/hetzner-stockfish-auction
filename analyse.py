@@ -133,7 +133,7 @@ def main():
         candidates.append(Candidate(
             id=server["id"],
             ram_size=server["ram_size"],
-            price=server["price"] * 1.19,
+            price=server["price"] * 1.19 + 2.02,
             bench=bench(server["cpu"]),
             description=" | ".join(server["description"]),
         ))
