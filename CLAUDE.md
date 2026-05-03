@@ -24,6 +24,7 @@ All values are in N/s matching `stockfish dev-20260307-b3a810a1` speedtest outpu
 - AMD EPYC 7502: 33,787,000 N/s (63t avx2) — bmi2 was 8.7% slower
 - AMD EPYC 7502P: 34,275,000 N/s (63t avx2) — bmi2 was 8.9% slower (see build rule below)
 - Intel Xeon W-2295: 17,187,000 N/s (35t avx512) — was 25% overestimated; validates _SIMD_AVX512=1.07 for Intel
+- Intel Xeon Gold 5412U: 27,401,000 N/s (47t avx512icl) — was 73% overestimated; vnni512 was 3.3% slower than avx512icl
 
 **Scaled from pts/stockfish (○)** — openbenchmarking.org values × 1.086 × ratio(N):
 - i7-6700, Ryzen 5 3600, Ryzen 7 3700X, Ryzen 9 5950X
@@ -42,7 +43,8 @@ From speedtest on Ryzen 7 7700 (Zen4) and Ryzen 9 9950X (Zen5):
 
 AMD Zen4/5 implement AVX-512 as two 256-bit pipes — gains are modest.
 Intel native AVX-512 (Cascade Lake-W): W-2295 measured avx512 **+7.07%** over avx2 → confirms _SIMD_AVX512=1.07. vnni512 was -0.96% vs avx512 (within noise; avx512 is best build for Cascade Lake-W).
-Skylake-W and Sapphire Rapids: assumed same factor; unmeasured.
+Intel Sapphire Rapids (Xeon Gold 5412U, measured): avx512 **+6.2%** over avx2; avx512icl **+11.5%** over avx2; vnni512 was **-3.3% vs avx512icl** — use avx512icl on Sapphire Rapids, not vnni512.
+Skylake-W: assumed same factor as Cascade Lake-W; unmeasured.
 
 **Stockfish build selection rule:**
 - **AMD pre-Zen5**: PEXT/PDEP is microcode-emulated → `bmi2` build is *slower* than `avx2`; always use `avx2` (or `avx512icl`/`vnni512` where supported). Confirmed: EPYC 7502P bmi2 was 8.9% slower, EPYC 7502 bmi2 was 8.7% slower than avx2.

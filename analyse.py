@@ -110,8 +110,8 @@ def bench(cpu: str) -> float:
             return 16_707_000             # ~ derived from i9-13900: P-core×0.97 + 8×E-thread
         case "AMD Ryzen 9 5950X":         # Zen3, AVX2, 32t @ 3.4 GHz
             return 22_805_000             # ○ × ratio(32)
-        case "Intel Xeon Gold 5412U":     # Sapphire Rapids, VNNI4 native, 48t @ 2.1 GHz
-            return 47_439_000             # ~ base × 1.086 × _SIMD_VNNI512 × ratio(48)=0.992
+        case "Intel Xeon Gold 5412U":     # Sapphire Rapids, avx512icl, 47t @ 2.1 GHz
+            return 27_400_562             # ★ avx512icl (vnni512 was 3.3% slower)
         case "AMD EPYC 7401P":            # Zen1, AVX2, 48t @ 2.0 GHz
             return 18_323_000             # ~ × ratio(48)
         case "Intel Xeon W-2295":         # Cascade Lake-W, AVX-512 native, 36t @ 3.0 GHz
