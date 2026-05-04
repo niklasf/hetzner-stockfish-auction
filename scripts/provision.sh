@@ -19,7 +19,8 @@ apt install -y \
   tmux \
   btop \
   lshw \
-  mosh
+  mosh \
+  parallel
 
 git clone https://github.com/official-stockfish/Stockfish.git
 git clone https://github.com/official-stockfish/docker-fishtest.git
