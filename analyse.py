@@ -108,6 +108,10 @@ def bench(cpu: str) -> float:
                                           # E-cores contribute ~3.5M total; P-cores ~15.4M
         case "Intel Core i9-12900K":      # Alder Lake, avxvnni best (no AVX-512), 8P+8E=24t
             return 16_707_000             # ~ derived from i9-13900: P-core×0.97 + 8×E-thread
+        case "Intel Core i5-13500":       # Raptor Lake, avxvnni best (no AVX-512), 6P+8E=20t
+            return 11_650_000             # ~ derived from i9-13900 (same uarch/build):
+                                          #   P: 6/8×15.4M×0.88(↓clock,154W PL2)≈10.2M
+                                          #   E: 8/16×3.5M×0.85≈1.5M
         case "AMD Ryzen 9 5950X":         # Zen3, AVX2, 32t @ 3.4 GHz
             return 22_805_000             # ○ × ratio(32)
         case "Intel Xeon Gold 5412U":     # Sapphire Rapids, avx512icl, 47t @ 2.1 GHz
